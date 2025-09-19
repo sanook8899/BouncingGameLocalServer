@@ -13,294 +13,337 @@ var awardBase = 0;
 var gameType = 2;
 var roomId = 0;
 var records = [];
-var multiplierValue = [[64, 16, 6, 3, 1.5, 1, 0.5, 1, 1.5, 3, 6, 16, 64], [228, 32, 8, 2, 0.5, 0.2, 0, 0.2, 0.5, 2, 8, 32, 228]];
-/*var probabilities = [0.00129327, 0.00129327, 0.02884998, 0.06565858, 0.14723438,
-    0.15718265, 0.19697573, 0.15718265, 0.14723438, 0.06565858,
-    0.02884998, 0.00129327, 0.00129327]; //95.46%
-*/
-var probabilities = [0.0005, 0.0005, 0.015, 0.0325, 0.075,
-    0.08, 0.593, 0.08, 0.075, 0.0325,
-    0.015, 0.0005, 0.0005]; //88.15%
-
-
+var multiplierValue = [2, 1, 0.5, 1, 2];
+var winIndex = [0, 1, 2, 3, 4, 5];
+var winMultiplierValue = [
+    [
+        [2, 3, 4, 4.5, 5, 6, 6.97, 7, 8, 8.1, 9, 10, 10.52, 11, 12, 13, 14, 15, 15.38, 16, 17, 17.57, 17.79, 18, 19, 20, 21, 21.5, 22, 22.72, 22.88, 23, 23.25, 24, 25, 26, 27, 28, 29, 30, 32, 33, 34, 34.5, 35, 35.5, 36, 37, 38, 40, 43, 45.5, 48, 50, 54, 55, 57, 59, 61, 62, 64, 66, 67, 70, 73, 76, 78, 79, 83, 89, 92, 103, 119],
+        [2.57, 4.88, 5.05, 6.16, 6.23, 9.3, 9.72, 10.83, 13, 14.08, 14.36, 14.47, 14.71, 15.42, 16, 16.13, 16.32, 17, 19.63, 21.24, 22.08, 24.11, 24.57, 25, 26, 26.26, 26.45, 28.28, 31.2, 33.29, 33.87, 34.06, 34.4, 34.9, 35, 35.19, 37, 37.35, 37.85, 38, 39.61, 39.7, 40, 40.9, 42.7, 43.04, 43.35, 44, 45, 45.35, 46.35, 47.3, 47.65, 48.49, 49, 49.65, 52.9, 53, 54.1, 55, 55.4, 57, 58.4, 59, 60.1, 62.95, 64, 66, 66.4, 68, 69, 70, 70.58, 70.8, 71, 72, 73.4, 74, 75, 75.1, 76, 78, 80, 80.2, 81, 82.4, 83, 85, 86, 87, 91, 93, 97, 98, 103, 111, 117, 123, 129, 140],
+        [0.35, 0.8, 1.02, 2.25, 2.72, 3, 3.38, 3.46, 3.59, 3.75, 4.06, 4.25, 4.47, 4.93, 5.19, 5.26, 5.43, 5.54, 5.77, 5.92, 5.97, 6.36, 6.5, 6.63, 7.12, 7.25, 7.97, 8.29, 8.5, 8.75, 8.97, 9.46, 9.58, 9.64, 10.06, 11.1, 11.34, 11.41, 11.51, 11.66, 11.94, 12.5, 12.61, 12.69, 13.15, 13.55, 13.63, 13.88, 14.38, 14.4, 15.12, 15.2, 15.4, 15.5, 15.81, 16.02, 16.13, 16.2, 16.32, 16.42, 16.44, 17.36, 17.5, 17.68, 17.78, 19.07, 19.09, 19.11, 19.16, 19.25, 19.68, 19.81, 19.95, 20.25, 22.1, 22.4, 23.69, 24, 24.08, 24.5, 25.67, 25.73, 25.93, 26, 26.3, 26.96, 27.75, 28.75, 29, 29.5, 31, 32, 34, 36.87, 37.5, 39, 39.5, 42, 44.5, 51],
+        [0.94, 1.04, 1.11, 1.42, 1.55, 2.65, 2.66, 3.15, 4, 4.03, 4.07, 4.72, 4.79, 5.07, 5.43, 5.49, 5.56, 7.11, 7.55, 7.58, 7.62, 7.74, 7.75, 8.13, 8.47, 8.82, 9.03, 9.09, 9.49, 9.64, 9.7, 9.88, 10.35, 10.38, 10.44, 10.67, 10.68, 10.74, 11, 11.06, 11.21, 11.5, 11.61, 11.65, 12.36, 12.41, 12.45, 12.97, 13.3, 13.38, 13.63, 13.99, 14.38, 14.48, 14.72, 14.82, 15, 15.32, 15.41, 15.47, 15.5, 15.6, 16.64, 16.72, 16.83, 17.33, 17.66, 18.01, 18.31, 18.38, 19.12, 19.62, 19.7, 20.09, 22.1, 23.54, 25.05, 25.38, 25.6, 26.5, 26.7, 27.38, 27.5, 29.14, 29.25, 32.5, 35.98, 38.38, 38.87, 38.89, 39, 43.1, 49.3, 51.4, 54.2, 55, 60.36, 62, 95, 130],
+        [0.08, 0.09, 0.71, 0.72, 0.85, 1.08, 1.24, 1.27, 1.46, 1.61, 1.64, 1.72, 2.17, 2.22, 2.3, 2.44, 2.46, 2.48, 2.51, 2.65, 2.7, 2.77, 2.82, 2.89, 2.98, 3.15, 3.17, 3.31, 3.32, 3.44, 3.49, 3.6, 3.63, 3.7, 3.75, 3.91, 4.11, 4.6, 4.75, 4.88, 4.92, 5.68, 6.04, 6.1, 6.11, 6.57, 7.82, 8.01, 8.1, 8.35, 8.92, 9.25, 9.44, 9.9, 10.54, 10.94, 11.13, 11.54, 11.8, 12.11, 12.18, 12.38, 12.69, 13.3, 14, 14.32, 15, 15.25, 15.5, 15.75, 16.85, 17.25, 18.05, 18.43, 18.75, 19.57, 20.22, 20.59, 23.5, 23.75, 25.93, 27, 28.5, 28.66, 28.88, 29, 29.75, 30, 31.34, 31.38, 31.5, 31.65, 34.25, 36.5, 43.85, 46.5, 51, 55, 56, 72.9],
+        [8.52, 10, 11.24, 14.38, 14.88, 15.32, 15.44, 15.47, 15.6, 15.74, 16.25, 17, 17.75, 18.57, 19.19, 19.28, 19.44, 19.91, 19.97, 20.26, 21, 21.13, 21.67, 22.33, 22.38, 23.02, 24.66, 25.29, 25.75, 25.88, 26, 27, 28.49, 29, 30, 31.18, 31.75, 31.82, 34, 34.5, 35.75, 36.25, 36.5, 37, 37.57, 38, 40, 40.25, 40.32, 41, 42, 44.75, 45, 45.5, 47, 48.5, 49, 49.5, 50, 51.5, 54, 55, 56, 56.5, 57.5, 58, 59, 60, 61, 62, 63, 64, 67, 68, 69.5, 70, 71, 73, 74, 75, 76, 77, 79, 81, 82, 83, 85, 90, 93, 94, 99, 107, 108, 109, 110, 116, 120, 122, 133, 137]
+    ],
+    [
+        [0.34, 0.47, 0.51, 0.87, 1.28, 3.8, 3.84, 4, 4.36, 5, 6.31, 6.72, 7, 8, 8.48, 8.92, 9.28, 10, 11, 11.02, 11.17, 12, 13, 14, 14.6, 14.8, 15, 17, 18, 19, 19.2, 20, 21, 22, 24, 24.36, 26, 27, 28, 28.4, 29, 30, 30.05, 32, 33, 36, 38, 38.4, 39, 40, 41, 43, 44, 45, 46, 49, 50, 50.6, 51, 53, 55, 57, 58, 60, 63, 64, 66, 68, 69, 70, 72, 73, 78, 79, 80, 83, 85, 89, 91, 95, 97, 99, 101, 103, 105, 107, 110, 112, 115, 125, 128, 130, 131, 134, 137, 138, 141, 154, 161, 186],
+        [0.23, 0.26, 1.07, 1.18, 1.26, 1.38, 1.49, 1.55, 1.56, 1.78, 1.87, 1.89, 2.02, 2.36, 2.52, 3.04, 3.52, 3.96, 4.24, 4.36, 4.6, 5.34, 5.94, 6.27, 6.29, 6.3, 6.31, 6.41, 6.49, 6.53, 6.59, 6.86, 6.96, 7.04, 7.6, 8, 8.16, 8.48, 8.8, 9.08, 9.52, 9.84, 10.04, 10.2, 10.36, 10.56, 11.27, 12.4, 15.56, 16, 16.6, 16.8, 17, 17.4, 19.4, 20.76, 22, 22.2, 22.4, 22.6, 23, 24, 25, 25.16, 25.2, 25.4, 27.8, 28.2, 30.2, 33, 33.6, 36, 42, 46, 47, 48, 51.8, 52, 53.6, 60, 61, 64, 69, 73, 76, 78, 79, 80, 81, 84, 92, 94, 95, 107, 118, 124, 137, 140, 141, 163],
+        [0.18, 0.2, 0.24, 0.26, 0.27, 0.28, 0.3, 0.32, 0.33, 0.37, 0.39, 0.4, 0.41, 0.42, 0.45, 0.53, 0.54, 0.7, 0.73, 0.75, 0.76, 0.92, 1, 1.02, 1.11, 1.17, 1.22, 1.24, 1.25, 1.27, 1.28, 1.29, 1.3, 1.33, 1.35, 1.39, 1.4, 1.45, 1.51, 1.61, 1.86, 1.97, 2.2, 2.29, 2.37, 2.6, 2.66, 2.68, 2.88, 3.17, 3.28, 3.91, 4.12, 4.59, 5.29, 5.35, 5.67, 5.86, 5.91, 6.25, 6.29, 6.72, 7.08, 7.79, 7.8, 8.4, 8.48, 9.4, 10, 10.51, 10.6, 11.31, 11.92, 12.4, 13.48, 13.64, 13.76, 13.8, 14.4, 16.2, 17.6, 18.4, 19, 19.6, 20, 22.6, 26.75, 36.48, 42.79, 46, 47.6, 51, 53, 69, 73, 85, 99, 101, 102, 112],
+        [0.18, 0.3, 0.32, 0.33, 0.37, 0.43, 0.46, 0.48, 0.5, 0.63, 0.67, 0.76, 0.96, 1.03, 1.2, 1.23, 1.27, 1.29, 1.49, 1.56, 1.57, 1.58, 1.68, 1.69, 1.94, 2.48, 2.61, 2.64, 2.65, 2.72, 2.79, 3.07, 3.12, 3.17, 3.44, 3.56, 3.59, 3.61, 3.64, 3.7, 3.9, 3.96, 4.38, 4.64, 4.87, 5, 5.11, 5.24, 5.58, 5.83, 6.08, 6.85, 7.05, 7.16, 7.9, 8.44, 9.04, 9.05, 9.64, 9.68, 9.76, 10.22, 10.81, 11.16, 11.76, 12.25, 12.48, 12.8, 15.85, 16.1, 17.77, 20.76, 21.2, 21.4, 22.4, 25.48, 27, 27.2, 29.4, 29.57, 30.18, 31.31, 32, 33.4, 33.7, 35.28, 35.8, 35.82, 36.25, 36.72, 39.05, 40.23, 56.4, 57, 73.59, 80, 102, 108.88, 111, 123],
+        [0.06, 0.07, 0.32, 0.34, 0.43, 0.51, 0.61, 0.62, 0.9, 0.95, 1.1, 1.13, 1.21, 1.43, 1.58, 1.81, 1.84, 1.86, 1.91, 1.93, 2.03, 2.07, 2.08, 2.12, 2.75, 2.82, 2.95, 3, 3.27, 3.28, 3.32, 3.67, 3.79, 4.24, 4.5, 5.08, 5.5, 5.83, 6.08, 7.31, 7.56, 7.92, 8, 9.38, 11.24, 11.6, 13.5, 14.06, 14.2, 14.6, 15.23, 15.76, 15.88, 16.8, 18, 18.41, 18.43, 18.6, 18.75, 19, 21.13, 22.2, 22.4, 23.4, 23.64, 24.25, 24.88, 27.28, 28.78, 29, 30.02, 30.6, 31.83, 33.05, 33.18, 33.86, 34.05, 40.18, 41.17, 43.4, 78, 80, 89, 91, 99, 102, 107, 110, 115, 116, 118, 120, 123, 124, 129, 148, 152, 154, 171, 194],
+        [0.48, 0.51, 0.65, 1.09, 2.28, 2.48, 2.76, 3.52, 3.58, 4.28, 4.52, 4.88, 5.3, 5.5, 5.68, 6.43, 6.5, 7.25, 7.43, 7.56, 7.6, 8.18, 8.2, 9.08, 15.6, 16, 16.6, 17.2, 19, 19.19, 19.4, 20.13, 20.2, 21.04, 23.26, 23.4, 24, 24.4, 25.8, 28.2, 29.4, 31.4, 32.87, 36.17, 37, 42.52, 44, 44.4, 49, 51.72, 53, 59, 63, 64, 65, 66, 69, 71, 72, 72.32, 78, 82, 85, 89, 92, 93, 94, 95, 97, 103, 104, 106, 108, 109, 111, 113, 116, 119, 121, 122, 126, 127, 130, 131, 133, 134, 135, 138, 139, 144, 146, 149, 150, 152, 154, 156, 159, 165, 181, 201]
+    ],
+    [
+        [6, 12, 14, 15, 15.38, 16, 18, 19.36, 21, 22, 23, 24, 25, 26, 27, 28, 30, 31, 32, 33, 33.16, 34, 35, 36, 38, 39, 40, 41, 42, 42.6, 43, 46, 48, 53, 54.08, 54.76, 59, 61.6, 66, 66.15, 80.3, 81.56, 82, 85.18, 89, 90.29, 93.35, 93.4, 95.76, 96.18, 97.4, 99, 99.01, 99.28, 102.08, 104.04, 106, 106.05, 107.44, 112.4, 121.4, 122.28, 123.13, 124, 124.8, 128, 140, 140.75, 143.6, 144.29, 147.6, 151, 156, 156.6, 162, 165, 165.4, 170, 173, 179, 180, 188, 194, 204, 205, 210, 234, 239, 249, 258, 260, 262, 279, 285, 302, 310, 316, 332, 338, 368],
+        [0.04, 0.08, 0.17, 0.19, 0.55, 0.63, 0.83, 0.84, 0.92, 0.97, 1, 1.01, 1.11, 1.2, 1.88, 2.34, 2.47, 4.2, 5, 5.55, 5.91, 6.96, 7, 7.13, 7.16, 7.62, 8.14, 8.37, 9.45, 10.99, 11.06, 11.08, 11.48, 13.84, 14, 14.37, 14.47, 15.64, 15.68, 15.78, 17.56, 19.32, 22.01, 22.99, 23.44, 24.87, 26.39, 26.41, 27.52, 28.72, 29.18, 30.06, 30.94, 30.96, 32.99, 33.24, 33.8, 36.53, 39.73, 41, 54.4, 93.74, 108.04, 114.81, 115.35, 115.48, 124.6, 130.76, 134.94, 138.84, 139.75, 140, 143.18, 144.6, 148.2, 152.35, 152.4, 157, 162, 164.58, 170.2, 172.68, 176.42, 176.6, 180, 182.2, 187.6, 188.6, 198.75, 208, 210.2, 214.6, 237, 237.6, 237.76, 254, 326, 366, 421, 424],
+        [0, 0.01, 0.02, 0.1, 0.11, 0.13, 0.14, 0.15, 0.24, 0.45, 0.47, 0.53, 0.6, 0.64, 0.76, 0.95, 0.97, 1.03, 1.04, 1.11, 1.25, 1.32, 1.37, 1.38, 1.4, 1.57, 1.66, 2.12, 2.25, 2.53, 2.66, 2.67, 2.69, 2.71, 2.95, 2.98, 2.99, 3.08, 3.09, 3.2, 3.29, 3.35, 3.4, 3.52, 3.64, 3.74, 4, 4.03, 4.5, 5.24, 5.41, 5.62, 5.92, 6.35, 6.78, 6.83, 7.07, 7.18, 7.2, 8.77, 9.29, 9.82, 10.31, 12.48, 12.58, 12.71, 12.9, 12.96, 13.06, 13.6, 13.68, 14.29, 14.6, 15.3, 16.77, 16.85, 16.87, 17.23, 20.31, 21.98, 23.96, 24.96, 25.86, 26.6, 26.64, 27.74, 30.35, 30.73, 32.6, 35.51, 35.6, 39.01, 43.04, 46.48, 50, 50.71, 63.22, 69.39, 195.8, 269],
+        [0.01, 0.02, 0.05, 0.18, 0.21, 0.23, 0.25, 0.26, 0.27, 0.28, 0.29, 0.35, 0.39, 0.44, 0.78, 1, 1.01, 1.2, 1.27, 1.3, 1.35, 1.52, 1.59, 1.64, 1.81, 1.82, 1.85, 1.86, 2.26, 2.27, 2.28, 2.33, 2.38, 2.39, 2.51, 2.62, 2.86, 3.48, 3.53, 4.04, 4.15, 4.24, 4.72, 5.32, 5.35, 5.72, 5.75, 6.76, 7.06, 7.08, 7.69, 7.88, 7.94, 8.02, 8.65, 8.93, 10.34, 11, 11.13, 12.29, 12.5, 12.57, 12.78, 13.01, 13.28, 13.5, 13.72, 13.75, 13.89, 14.45, 14.59, 16.66, 17.48, 18.2, 23.01, 24.76, 24.8, 26.62, 27.03, 27.41, 27.74, 28.51, 29.46, 30.91, 31.34, 31.72, 32.02, 34.43, 34.79, 35.24, 35.99, 36.74, 36.99, 42.69, 58.29, 64.6, 73.71, 76.6, 88, 96.7],
+        [0, 0.06, 0.22, 0.3, 0.58, 0.91, 1.13, 1.29, 1.49, 2.14, 2.36, 2.69, 2.82, 3.2, 3.31, 4.19, 4.24, 4.28, 4.33, 4.34, 5, 5.01, 5.16, 5.21, 5.27, 5.28, 5.49, 5.56, 5.69, 5.78, 6.17, 6.37, 6.63, 6.83, 7, 7.88, 8.49, 8.68, 9.84, 10.27, 10.87, 11, 11.3, 12.09, 12.11, 12.48, 13.55, 14.32, 15.02, 16.3, 16.34, 17.16, 17.28, 17.33, 19.01, 19.04, 19.29, 19.4, 19.87, 20.49, 21.8, 22.44, 23.68, 24.06, 25.74, 26.49, 26.63, 27.06, 27.07, 29.4, 30.92, 33.01, 34.28, 34.7, 35.23, 36.56, 36.64, 37.2, 41, 42.4, 47.15, 48.72, 56.05, 59.01, 64.01, 67.84, 72.47, 76.47, 76.6, 96.98, 106.47, 108.05, 111.84, 132.4, 154.26, 203, 265, 304, 314, 334],
+        [0, 0.09, 0.67, 0.69, 0.76, 1.11, 1.15, 1.26, 1.69, 2.21, 2.27, 3.28, 4, 4.68, 5.18, 5.84, 5.9, 6.11, 6.13, 6.21, 6.28, 6.37, 6.74, 7.23, 8.97, 9.03, 9.74, 10.4, 10.75, 11, 11.82, 12.8, 14.57, 16.15, 16.42, 16.93, 19.4, 19.55, 28.6, 30.45, 44.29, 51.64, 62.46, 62.64, 68.54, 71.04, 72.49, 81.82, 86.01, 108.73, 113.11, 130.6, 137.33, 141.2, 152, 164, 164.96, 168.2, 170, 174.8, 177.68, 189, 230, 245, 249, 251, 254, 255, 257, 260, 268, 278, 284, 286, 292, 308, 311, 314, 316, 319, 322, 324, 325, 327, 328, 332, 337, 338, 359, 361, 368, 369, 370, 372, 387, 391, 392, 401, 405, 455]
+    ],
+];
 
 function generateRandomString(length) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let randomString = '';
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let randomString = "";
 
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        randomString += characters.charAt(randomIndex);
-    }
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    randomString += characters.charAt(randomIndex);
+  }
 
-    return randomString;
+  return randomString;
 }
 
 function generateRandomInt(length) {
-    const characters = '0123456789';
-    let randomString = '';
+  const characters = "0123456789";
+  let randomString = "";
 
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        randomString += characters.charAt(randomIndex);
-    }
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    randomString += characters.charAt(randomIndex);
+  }
 
-    return randomString;
+  return randomString;
 }
 
-
 function loginRequest() {
-    playerId = generateRandomString(8);
-    balance = 200000;
+  playerId = generateRandomString(8);
+  balance = 200000;
 
-    let response = {
-        errCode: 0,
-        errMsg: "success",
-        vals: {},
-    }
+  let response = {
+    errCode: 0,
+    errMsg: "success",
+    vals: {},
+  };
 
-    response.vals = {
-        type: 1,
-        id: 1,
-        data: {
-            sessionId: generateRandomInt(10),
-            errCode: 0,
-            lobbyServerIp: "127.0.0.1",
-            lobbyServerPort: 9900,
-            playerId: playerId,
-        }
-    }
+  response.vals = {
+    type: 1,
+    id: 1,
+    data: {
+      sessionId: generateRandomInt(10),
+      errCode: 0,
+      lobbyServerIp: "127.0.0.1",
+      lobbyServerPort: 9900,
+      playerId: playerId,
+    },
+  };
 
-    return response;
+  return response;
 }
 
 function lobbyRequest() {
+  let response = {
+    errCode: 0,
+    errMsg: "success",
+    vals: {},
+  };
 
-    let response = {
-        errCode: 0,
-        errMsg: "success",
-        vals: {},
-    }
-
-    response.vals = {
-        type: 3,
-        id: 3,
-        data: {
-            gameId: generateRandomInt(6),
-            errCode: 0,
-            balance: balance,
-            serverTime: Date.now(),
-            currency: "CNY",
-            walletType:2,
-        }
-    }
-    return response;
+  response.vals = {
+    type: 3,
+    id: 3,
+    data: {
+      gameId: generateRandomInt(6),
+      errCode: 0,
+      balance: balance,
+      serverTime: Date.now(),
+      currency: "CNY",
+      walletType: 2,
+    },
+  };
+  return response;
 }
 
 function joinRoomRequest() {
-    let response = {
-        errCode: 0,
-        errMsg: "success",
-        vals: {},
-    }
+  let response = {
+    errCode: 0,
+    errMsg: "success",
+    vals: {},
+  };
 
-    betInfo = {
-        gameName: "Plinko",
-        minBet: 1,
-        maxBet: 1024,
-    }
+  betInfo = {
+    gameName: "Bouncing Ball",
+    betSizeList: [1, 4, 16, 64, 256, 1024],
+    minBet: 1,
+    maxBet: 1024,
+    defaultBet: 1,
+    decimalCount: false,
+  };
 
-    currencyInfo = [{
-        currencyId: 1,
-        currency: "CNY",
-    }]
+  currencyInfo = [
+    {
+      currencyId: 1,
+      currency: "CNY",
+    },
+  ];
 
-    response.vals = {
-        type: 100000,
-        id: 3,
-        data: {
-            subType: 100005,
-            subData: [{
-                gameType: gameType,
-                roomId: roomId,
-                errCode: 0,
-                balance: balance,
-                betInfo: [betInfo],
-                currencyInfo: currencyInfo,
-            }]
-        }
-    }
+  response.vals = {
+    type: 100000,
+    id: 3,
+    data: {
+      subType: 100005,
+      subData: [
+        {
+          gameType: gameType,
+          roomId: roomId,
+          errCode: 0,
+          balance: balance,
+          betInfo: [betInfo],
+          currencyInfo: currencyInfo,
+        },
+      ],
+    },
+  };
 
-    return response;
+  return response;
 }
 
 function transferRequest() {
-    let response = {
-        errCode: 0,
-        errMsg: "success",
-        vals: {},
-    }
+  let response = {
+    errCode: 0,
+    errMsg: "success",
+    vals: {},
+  };
 
-    response.vals = {
-        type: 100000,
-        id: 3,
-        data: {
-            subType: 100069,
-            subData: [{
-                errCode: 0,
-                balance: balance,
-                increaseMoney: increaseMoney,
-            }]
-        }
-    }
+  response.vals = {
+    type: 100000,
+    id: 3,
+    data: {
+      subType: 100069,
+      subData: [
+        {
+          errCode: 0,
+          balance: balance,
+          increaseMoney: increaseMoney,
+        },
+      ],
+    },
+  };
 
-    increaseMoney = 0;
-    return response;
+  increaseMoney = 0;
+  return response;
 }
 
 function recordRequest() {
-    let response = {
-        errCode: 0,
-        errMsg: "success",
-        vals: {},
-    }
+  let response = {
+    errCode: 0,
+    errMsg: "success",
+    vals: {},
+  };
 
-    records = [
+  records = [
+    {
+      id: 321541,
+      bet: 2,
+      odds: 0.0,
+      winMoney: 0,
+    },
+    {
+      id: 321541,
+      bet: 2,
+      odds: 1.5,
+      winMoney: 3,
+    },
+  ];
+
+  response.vals = {
+    type: 100000,
+    id: 3,
+    data: {
+      subType: 100071,
+      subData: [
         {
-            id: 321541,
-            bet: 2,
-            odds: 0.0,
-            winMoney:0,
+          errCode: 0,
+          opCode: "GetRecords",
+          recordsInfo: records,
         },
-        {
-            id: 321541,
-            bet: 2,
-            odds: 1.5,
-            winMoney: 3,
-        },
-    ]
+      ],
+    },
+  };
 
-    response.vals = {
-        type: 100000,
-        id: 3,
-        data: {
-            subType: 100071,
-            subData: [{
-                errCode: 0,
-                opCode: "GetRecords",
-                recordsInfo: records,
-            }]
-        }
-    }
-
-    return response;
+  return response;
 }
 
 function roomInfoRequest() {
-    let response = {
-        errCode: 0,
-        errMsg: "success",
-        vals: {},
-    }
+  let response = {
+    errCode: 0,
+    errMsg: "success",
+    vals: {},
+  };
 
-    roomInfo = {
-        betOdds: multiplierValue,
-        minBet: 1,
-        maxBet: 1024,
-        recordList: records,
-    }
+  roomInfo = {
+    betOdds: multiplierValue,
+    minBet: 1,
+    maxBet: 1024,
+    recordList: records,
+  };
 
-    response.vals = {
-        type: 100000,
-        id: 3,
-        data: {
-            subType: 100071,
-            subData: [{
-                errCode: 0,
-                opCode: "SyncRoomInfo",
-                roomInfo: roomInfo,
-            }]
-        }
-    }
+  response.vals = {
+    type: 100000,
+    id: 3,
+    data: {
+      subType: 100071,
+      subData: [
+        {
+          errCode: 0,
+          opCode: "SyncRoomInfo",
+          roomInfo: roomInfo,
+        },
+      ],
+    },
+  };
 
-    return response;
+  return response;
 }
 
 function roomListRequest() {
-    let response = {
-        errCode: 0,
-        errMsg: "success",
-        vals: {},
-    }
+  let response = {
+    errCode: 0,
+    errMsg: "success",
+    vals: {},
+  };
 
-    let date = Date.now();
-    date += 60 * 60 * 1000;
-    response.vals = {
-        type: 100000,
-        id: 3,
-        data: {
-            gameType: gameType,
-            roomIndex: roomId,
-            isOccupied: true,
-            reserveExpiredTime : date,
-        }
-    }
+  let date = Date.now();
+  date += 60 * 60 * 1000;
+  response.vals = {
+    type: 100000,
+    id: 3,
+    data: {
+      gameType: gameType,
+      roomIndex: roomId,
+      isOccupied: true,
+      reserveExpiredTime: date,
+    },
+  };
 
-    return response;
+  return response;
 }
 
 function setBetRequest(bet, level) {
-    awardBase = bet;
-    gameCode = "#" + generateRandomString(10);
-    balance -= awardBase;
+  awardBase = bet;
+  gameCode = "#" + generateRandomString(10);
+  balance -= awardBase;
 
-    var cumulativeProbabilities = probabilities.reduce((acc, curr, i) => {
-        if (i === 0) acc.push(curr);
-        else acc.push(acc[i - 1] + curr);
-        return acc;
-    }, []);
+  // choose random winMultiplierValue by level
+  // level is expected to be 1-based (1,2,3), so adjust for 0-based index
+  let winMultipliers = winMultiplierValue[level];
 
-    var randomNumber = Math.random();
-    var selectedMultiplierIndex = cumulativeProbabilities.findIndex(cumProb => randomNumber < cumProb);
-    console.log("selectedMultiplierIndex", selectedMultiplierIndex);
+  // Pick a random index from 0 - 5, 0 mean lose
+  let selectedWinIndex = Math.floor(Math.random() * winIndex.length);
 
-    var selectedMultiplier = multiplierValue[level - 1];
-    console.log("selectedMultiplier", selectedMultiplier);
+  let selectedMultiplierArray = winMultipliers[selectedWinIndex];
+  let selectedMultiplierIndex = Math.floor(Math.random() * selectedMultiplierArray.length);
+  let selectedMultiplier = selectedMultiplierArray[selectedMultiplierIndex];
 
-    let winAmount = selectedMultiplier[selectedMultiplierIndex - 1] * bet;
+  let winningBet = 0;
+  if (selectedWinIndex != 0) {
+    winningBet = bet * multiplierValue[selectedWinIndex - 1];
+  }
 
-    let response = {
-        errCode: 0,
-        errMsg: "success",
-        vals: {},
-    }
+  let baseOdds = 0;
+  if(selectedWinIndex > 0){
+    baseOdds = multiplierValue[selectedWinIndex - 1];
+  }
 
-    betInfo = [{
-        bet: awardBase,
-        balance: balance,
-        index: selectedMultiplierIndex,
-        winAmount: winAmount,
-        roundId: gameCode,
-        finalBalance: balance + winAmount,
-    }]
-    response.vals = {
-        type: 100000,
-        id: 3,
-        data: {
-            subType: 100071,
-            subData: [{
-                errCode: 0,
-                opCode: "SetBet",
-                betInfo: betInfo,
-            }]
-        }
-    }
+  // Calculate win amount
+  let winAmount = selectedMultiplier * bet * baseOdds;
 
-    balance += winAmount;
+  let response = {
+    errCode: 0,
+    errMsg: "success",
+    vals: {},
+  };
 
-    return response;
+  betInfo = [
+    {
+      bet: awardBase,
+      balance: balance,
+      index: selectedWinIndex,
+      winningBet: winningBet,
+      winAmount: winAmount,
+      multiplierValue: selectedMultiplier,
+      roundId: gameCode,
+      finalBalance: balance + winAmount,
+    },
+  ];
+  response.vals = {
+    type: 100000,
+    id: 3,
+    data: {
+      subType: 100071,
+      subData: [
+        {
+          errCode: 0,
+          opCode: "SetBet",
+          betInfo: betInfo,
+        },
+      ],
+    },
+  };
+
+  balance += winAmount;
+
+  return response;
 }
-
 
 server.on("connection", (ws) => {
     wsocket = ws;
@@ -361,83 +404,8 @@ server.on("connection", (ws) => {
                     let level = jsonContent.data[0].subData[0].message.level;
                     let response = setBetRequest(bet, level);
                     ws.send(JSON.stringify(response));
-                    //original
-                    //let response = setBetRequest(bet);
-                    //ws.send(JSON.stringify(response));
-                    // new
-                    let size = jsonContent.data[0].subData[0].message.size;
-                    //for (let i = 0; i < size; i++) {
-                    //    let response = setBetRequest(bet);
-                    //    ws.send(JSON.stringify(response));
-                    //}
                 }
             }
         }
-    })
-
-    function randomBetResult(bet) {
-        var multiplierValue = [49, 14, 5.3, 2.1, 0.5, 0.2, 0.0, 0.2, 0.5, 2.1, 5.3, 14, 49];
-        // Probabilities corresponding to each multiplier
-        var probabilities = [0.0035, 0.0035, 0.0355, 0.0709, 0.1418, 0.156, 0.1773, 0.156, 0.1418, 0.0709, 0.0355, 0.0035, 0.0035];
-
-        // Calculate cumulative probabilities for interval mapping
-        var cumulativeProbabilities = probabilities.reduce((acc, curr, i) => {
-            if (i === 0) acc.push(curr);
-            else acc.push(acc[i - 1] + curr);
-            return acc;
-        }, []);
-
-        // Generate a random number between 0 and 1
-        var randomNumber = Math.random();
-
-        // Determine which interval the random number falls into
-        var selectedMultiplierIndex = cumulativeProbabilities.findIndex(cumProb => randomNumber < cumProb);
-
-        // Calculate the win amount based on the selected multiplier
-        var winAmount = bet * multiplierValue[selectedMultiplierIndex];
-
-        return {
-            selectedMultiplier: multiplierValue[selectedMultiplierIndex],
-            winAmount: winAmount
-        };
-    }
-
-    function adjustProbabilities(currentRTP, targetRTP, probabilities) {
-        // Simplified adjustment logic: if the actual RTP is higher than the target, decrease the probability of high multipliers, and vice versa
-        if (currentRTP > targetRTP) {
-            // Decrease the probability of the highest multiplier slightly
-            probabilities[0] -= 0.001; // Example adjustment
-            probabilities[probabilities.length - 1] -= 0.001;
-        } else {
-            // Increase the probability of the highest multiplier slightly
-            probabilities[0] += 0.001;
-            probabilities[probabilities.length - 1] += 0.001;
-        }
-
-        // Ensure the probabilities still sum to 1 after adjustment
-        let sum = probabilities.reduce((acc, val) => acc + val, 0);
-        probabilities = probabilities.map(prob => prob / sum);
-
-        return probabilities;
-    }
-
-
-    function simulateBetWithDynamicRTP(bet, targetRTP) {
-        // Your existing logic to select a multiplier based on current probabilities
-
-        // Update total bets and total payouts
-        totalBets += bet;
-        // Assuming result is the outcome of the bet based on the current logic
-        let result = randomBetResult(bet); // This function needs to be defined as before, using current probabilities
-        totalPayouts += result.winAmount;
-
-        // Calculate current RTP
-        let currentRTP = totalPayouts / totalBets;
-
-        // Adjust probabilities based on current RTP vs. target RTP
-        let adjustedProbabilities = adjustProbabilities(currentRTP, targetRTP, probabilities); // probabilities should be defined globally or passed appropriately
-
-        // Use the adjusted probabilities for future bets
-        // This step would involve integrating the adjusted probabilities back into your bet selection logic
-    }
+    });
 });
