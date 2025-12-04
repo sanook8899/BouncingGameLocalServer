@@ -140,6 +140,8 @@ function loginRequest() {
       lobbyServerIp: "127.0.0.1",
       lobbyServerPort: 9900,
       playerId: playerId,
+      label: "buffalo",
+      labelLogo: "",
     },
   };
 
@@ -161,7 +163,7 @@ function lobbyRequest() {
       errCode: 0,
       balance: balance,
       serverTime: Date.now(),
-      currency: "CNY",
+      currency: "USD",
       walletType: 2,
     },
   };
@@ -177,17 +179,18 @@ function joinRoomRequest() {
 
   betInfo = {
     gameName: "Bouncing Ball",
-    betSizeList: [1, 4, 16, 64, 256, 1024],
-    minBet: 1,
-    maxBet: 1024,
-    defaultBet: 1,
+    betSizeList: [0.2, 0.8, 3.2, 12.8, 51.2, 204.8],
+    minBet: 0.2,
+    maxBet: 400,
+    maxBetSize: 204.8,
+    defaultBet: 0.2,
     decimalCount: false,
   };
 
   currencyInfo = [
     {
       currencyId: 1,
-      currency: "CNY",
+      currency: "$",
     },
   ];
 
@@ -287,8 +290,8 @@ function roomInfoRequest() {
 
   roomInfo = {
     betOdds: multiplierValue,
-    minBet: 1,
-    maxBet: 1024,
+    minBet: 200,
+    maxBet: 8000000,
     recordList: records,
   };
 
@@ -342,12 +345,31 @@ function setBetRequest(bet, level) {
   // level is expected to be 1-based (1,2,3), so adjust for 0-based index
   let winMultipliers = winMultiplierValue[level];
 
-  // Pick a random index from 0 - 5, 0 mean lose
-  let selectedWinIndex = Math.floor(Math.random() * winIndex.length);
+  // Weighted selection for easier big wins
+  // Higher chance for indices 4 and 5 (biggest multipliers)
+  let random = Math.random();
+  let selectedWinIndex;
+  
+  if (random < 0.35) {
+    selectedWinIndex = 5; // 25% chance for biggest win (2x base)
+  } else if (random < 0.70) {
+    selectedWinIndex = 4; // 20% chance for second biggest (2x base)
+  } else if (random < 0.80) {
+    selectedWinIndex = 3; // 15% chance for medium high (1x base)
+  } else if (random < 0.90) {
+    selectedWinIndex = 2; // 12% chance for medium (0.5x base)
+  } else if (random < 0.95) {
+    selectedWinIndex = 1; // 10% chance for low (1x base)
+  } else {
+    selectedWinIndex = 0; // 18% chance for lose
+  }
 
   let selectedMultiplierArray = winMultipliers[selectedWinIndex];
-  let selectedMultiplierIndex = Math.floor(Math.random() * selectedMultiplierArray.length);
-  let selectedMultiplier = selectedMultiplierArray[selectedMultiplierIndex];
+  
+  // Pick higher multipliers from the array (favor the end of the array where bigger multipliers are)
+  let arrayLength = selectedMultiplierArray.length;
+  let biasedIndex = Math.floor(Math.pow(Math.random(), 0.5) * arrayLength); // Square root bias toward higher indices
+  let selectedMultiplier = selectedMultiplierArray[biasedIndex];
 
   let winningBet = 0;
   if (selectedWinIndex != 0) {
